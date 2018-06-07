@@ -67,10 +67,12 @@ int main( int argc, char *argv[ ] ){
         unsigned char roundKeys[176];
         KeyExpansion(key, roundKeys);
         
+        in[0] = (unsigned char) fgetc(fin);
+        
         while(!feof(fin)){
             
             //Ler bloco a ser processado
-            for(i = 0; i < 16; i++){
+            for(i = 1; i < 16; i++){
                 
                 in[i] = (unsigned char) fgetc(fin);
                 
@@ -135,11 +137,16 @@ int main( int argc, char *argv[ ] ){
                     fwrite(out, 1, 16, fout);
                 }
             }
+            
+            if(!feof(fin))
+                in[0] = (unsigned char) fgetc(fin);
         }
-        free(out);
+        
         fclose(fkey);
         fclose(fin);
         fclose(fout);
+        
+        free(out);
     }
     return 0;
 }

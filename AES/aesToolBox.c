@@ -329,7 +329,8 @@ void InverseAddRoundKey(unsigned char *block, unsigned char *roundKey){
 //unsigned char* KeyExpansion(unsigned char *key){
 void KeyExpansion(unsigned char *key, unsigned char *roundKeys){   
     //unsigned char roundKeys[176];
-    unsigned char *temp = malloc(4*sizeof(unsigned char));
+    unsigned char *temp;
+    temp = (unsigned char*)malloc(4*sizeof(unsigned char));
     
     int i = 0, j;
     while(i < 16){
@@ -377,7 +378,7 @@ void KeyExpansion(unsigned char *key, unsigned char *roundKeys){
         
     }
     
-    free(temp);
+    //free(temp);
 }
 
 void SubWord(unsigned char *word){
