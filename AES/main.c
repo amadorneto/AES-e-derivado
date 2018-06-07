@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "aesToolBox.h"
+#include "a2esToolBox.h"
 
 int main( int argc, char *argv[ ] ){
     
@@ -28,7 +29,7 @@ int main( int argc, char *argv[ ] ){
         
         int i, j; 
         FILE *fkey, *fin, *fout;
-        unsigned char key[16], in[17], *out;
+        unsigned char key[16], key2[16], in[17], *out, roundKeys[176], roundKeys2[176];
         in[16] = (unsigned char) EOF;
         
         out = (unsigned char*) malloc(16*sizeof(unsigned char));
@@ -62,8 +63,23 @@ int main( int argc, char *argv[ ] ){
             }
         }
         
-        unsigned char roundKeys[176];
         KeyExpansion(key, roundKeys);
+        
+        //Leitura da segunda chave do A²ES
+        if(strcmp(argv[1], "2") == 0){
+            for(i = 0; i < 16; i++){
+                key2[i] = (unsigned char) fgetc(fkey);
+                
+                //Chave menor que o esperado
+                if(key2[i] == (unsigned char) EOF){
+                    printf("Chave menor que o esperado\n");
+                    printf("Por favor forneça uma chave de 32 bytes\n");
+                    return -1;
+                }
+            }
+            KeyExpansion(key2, roundKeys2);
+        }
+        
         
         in[0] = (unsigned char) fgetc(fin);
         
@@ -92,16 +108,15 @@ int main( int argc, char *argv[ ] ){
                 if(strcmp(argv[1], "1") == 0){
                     
                     //Criptografar
-                    Encrypt(in, roundKeys, out);
+                    AESEncrypt(in, roundKeys, out);
                                        
                 }
                 
-                //Algoritmo 2 (INSERT FANCY NAME HERE PLS...)
+                //Algoritmo 2 (A²ES)
                 else if(strcmp(argv[1], "2") == 0){
                     
                     //Criptografar
-                    //INSERT FUNÇÃO HERE PLOX
-                    
+                    A2ESEncrypt(in, roundKeys, roundKeys2, out);
                 }
                 
             //Descriptografar
@@ -111,14 +126,14 @@ int main( int argc, char *argv[ ] ){
                 if(strcmp(argv[1],"1") == 0){
                     
                     //Descriptografar
-                    Decrypt(in, roundKeys, out);
+                    AESDecrypt(in, roundKeys, out);
                 }
                 
-                //Algoritmo 2 (INSERT FANCY NAME HERE PLS...)
+                //Algoritmo 2 (A²ES)
                 else if(strcmp(argv[1], "2") == 0){
                     
                     //Descriptografar
-                    //INSERT FUNÇÃO HERE PLOX
+                    A2ESDecrypt(in, roundKeys, roundKeys2, out);
                     
                 }
             }
@@ -126,14 +141,14 @@ int main( int argc, char *argv[ ] ){
             if(!feof(fin))
                 in[0] = (unsigned char) fgetc(fin);
             
-            if(feof(fin) && strcmp(argv[2], "D") == 0){
+            unsigned char temp = out[15];
+            
+            if(feof(fin) && strcmp(argv[2], "D") == 0 && temp > 0 && temp < 16){
                 short ver = 1;
-                unsigned char temp = out[15];
-                
-                for(i = 15; i >= 16 - temp; i-- ){
+                 
+                for(i = 15; i >= 16 - temp && ver == 1; i-- )
                     if(out[i] != temp)
                         ver = 0;
-                }
                 
                 if(ver){
                     //Escrever resultado

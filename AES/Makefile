@@ -1,8 +1,8 @@
 all:
-	gcc -o A3S.out main.c aesToolBox.c
+	gcc -g -o A2ES.out main.c aesToolBox.c a2esToolBox.c
 
 clean:
-	rm A3S.out
+	rm A2ES.out
 
 run:
-	./A3S.out
+	./A2ES.out

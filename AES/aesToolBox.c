@@ -401,7 +401,7 @@ void RotWord(unsigned char *word){
 }
 
 //Recebe mensagem de 16 bytes, as chave de rodada de 176 bytes e um vetor vazio de 16 bytes para resultado
-void Encrypt(unsigned char *message, unsigned char *roundKeys, unsigned char *result){
+void AESEncrypt(unsigned char *message, unsigned char *roundKeys, unsigned char *result){
     
     int i;
     
@@ -427,7 +427,7 @@ void Encrypt(unsigned char *message, unsigned char *roundKeys, unsigned char *re
 }
 
 //Recebe criptograma de 16 bytes, as chaves de rodada de 176 bytes e um vetor vazio de 16 bytes para resultado
-void Decrypt(unsigned char *crypto, unsigned char *roundKeys, unsigned char *result){
+void AESDecrypt(unsigned char *crypto, unsigned char *roundKeys, unsigned char *result){
     
     int i;
 
