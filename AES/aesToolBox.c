@@ -292,7 +292,6 @@ void InverseMixColumns(unsigned char *block){
         block[i+8] = RjindaelMultiply(a[i],13) ^ RjindaelMultiply(a[i+4],9) ^ RjindaelMultiply(a[i+8],14) ^ RjindaelMultiply(a[i+12],11);
         block[i+12] = RjindaelMultiply(a[i],11) ^ RjindaelMultiply(a[i+4],13) ^ RjindaelMultiply(a[i+8],9) ^ RjindaelMultiply(a[i+12],14);
     }
-    
 }
 
 unsigned char RjindaelMultiply(unsigned char numero, int tabela){
@@ -314,7 +313,6 @@ void AddRoundKey(unsigned char *block, unsigned char *roundKey){
     //Realiza uma operação XOR bit a bit entre bloco e chave de rodada
     for(i = 0; i<16; i++)
         block[i] ^= roundKey[i];
-    
 }
 
 //Etapa inversa de AddRoundKey
@@ -333,21 +331,18 @@ void KeyExpansion(unsigned char *key, unsigned char *roundKeys){
     //unsigned char roundKeys[176];
     unsigned char *temp = malloc(4*sizeof(unsigned char));
     
-    
     int i = 0, j;
     while(i < 16){
         roundKeys[i] = key[i];
         i++;
     }
-    
-    
+        
     //Carrega em temp a última coluna da primeira matrix (coluna 3)
     temp[0] = roundKeys[3];
     temp[1] = roundKeys[7];
     temp[2] = roundKeys[11];
     temp[3] = roundKeys[15];
-    
-    
+        
     //Serão geradas as colunas restantes de roundKeys
     //As iterações começam da coluna 4
     for(i = 4; i < 44; i++){
@@ -363,7 +358,6 @@ void KeyExpansion(unsigned char *key, unsigned char *roundKeys){
             temp[i] ^= RCon[i/4];
         }
 
-        
         //É feita a operação de XOR entre a coluna atual e quatro colunas atrás
         for(j = 0; j < 4; j++){
             auxiliar = (i-4)/4;
@@ -371,8 +365,7 @@ void KeyExpansion(unsigned char *key, unsigned char *roundKeys){
             auxiliar += (i%4) + j*4;
             temp[j] ^= roundKeys[auxiliar];
         }
-        
-        
+                
         auxiliar = i/4;
         auxiliar *= 16;
         auxiliar += (i%4);
@@ -391,7 +384,6 @@ void SubWord(unsigned char *word){
     unsigned char i;
     for(i = 0; i < 4; i++)
         word[i] = SBox[word[i]];
-    
 }
 
 //Etapa de rotacionar bytes que estão em uma mesma linha do bloco
@@ -412,7 +404,6 @@ void Encrypt(unsigned char *message, unsigned char *roundKeys, unsigned char *re
     
     int i;
     
-
     //Copia estado inicial
     for(i = 0; i < 16; i++)
         result[i] = message[i];
@@ -426,14 +417,11 @@ void Encrypt(unsigned char *message, unsigned char *roundKeys, unsigned char *re
         MixColumns(result);
         AddRoundKey(result,&roundKeys[16*i]);
     }
-    
-    
+        
     //Ultima rodada
     SubBytes(result);
     ShiftRows(result);
     AddRoundKey(result,&roundKeys[160]);
-    
-    //free(roundKeys);
     
 }
 
@@ -445,8 +433,6 @@ void Decrypt(unsigned char *crypto, unsigned char *roundKeys, unsigned char *res
     //Copia estado inicial
     for(i = 0; i < 16; i++)
         result[i] = crypto[i];
-    
-    
     
     //Começa o processo de decriptação    
     InverseAddRoundKey(result, &roundKeys[160]);

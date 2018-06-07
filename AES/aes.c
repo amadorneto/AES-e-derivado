@@ -3,13 +3,6 @@
 #include <stdlib.h>
 #include "aesToolBox.h"
 
-unsigned long fsize(FILE *f){
-    fseek(f, 0, SEEK_END);
-    unsigned long len = (unsigned long)ftell(f);
-    fseek(f, 0, SEEK_SET);
-    return len;
-}
-
 int main( int argc, char *argv[ ] ){
     
     if(argc != 6){
@@ -34,7 +27,6 @@ int main( int argc, char *argv[ ] ){
     }else {
         
         int i, j; 
-        long input_size;
         FILE *fkey, *fin, *fout;
         unsigned char key[16], in[17], *out;
         in[16] = (unsigned char) EOF;
@@ -75,21 +67,15 @@ int main( int argc, char *argv[ ] ){
         unsigned char roundKeys[176];
         KeyExpansion(key, roundKeys);
         
-        input_size = fsize(fin);
-        
-        //Ler início do arquivo
-        in[0] = (unsigned char) fgetc(fin);
-        
         while(!feof(fin)){
             
-            //Ler restante do bloco a ser processado
-            for(i = 1; i < 16; i++){
+            //Ler bloco a ser processado
+            for(i = 0; i < 16; i++){
                 
                 in[i] = (unsigned char) fgetc(fin);
                 
                 //Arquivo acabou no meio do bloco
                 if(feof(fin)){
-                    printf("\nsocorro\n");
                     
                     //Preencher bloco com dummy char
                     for(j = i; j < 16; j++)
@@ -99,8 +85,7 @@ int main( int argc, char *argv[ ] ){
                     i = 16;
                 }
             }
-            
-            
+                        
             //Criptografar
             if(strcmp(argv[2],"C") == 0){
                 //Algoritmo 1 (AES)
@@ -111,8 +96,7 @@ int main( int argc, char *argv[ ] ){
                     
                     //Escrever resultado
                     fwrite(out, 1, 16, fout);
-                   
-                    
+                                       
                 }
                 
                 //Algoritmo 2 (INSERT FANCY NAME HERE PLS...)
@@ -149,12 +133,8 @@ int main( int argc, char *argv[ ] ){
                     
                     //Escrever resultado
                     fwrite(out, 1, 16, fout);
-                    
                 }
             }
-            
-            //Ler início do próximo bloco
-            in[0] = (unsigned char) fgetc(fin);
         }
         free(out);
         fclose(fkey);
