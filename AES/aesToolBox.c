@@ -333,9 +333,6 @@ void KeyExpansion(unsigned char *key, unsigned char *roundKeys){
     //unsigned char roundKeys[176];
     unsigned char *temp = malloc(4*sizeof(unsigned char));
     
-    //unsigned char *roundKeys;
-    //roundKeys = (unsigned char*) malloc((sizeof(unsigned char) * 176));
-    //unsigned char roundKeys[176];
     
     int i = 0, j;
     while(i < 16){
@@ -386,6 +383,8 @@ void KeyExpansion(unsigned char *key, unsigned char *roundKeys){
         roundKeys[auxiliar + 12] = temp[3];
         
     }
+    
+    free(temp);
 }
 
 void SubWord(unsigned char *word){
@@ -447,7 +446,6 @@ void Decrypt(unsigned char *crypto, unsigned char *roundKeys, unsigned char *res
     for(i = 0; i < 16; i++)
         result[i] = crypto[i];
     
-    //roundKeys = malloc(176*sizeof(unsigned char));
     
     
     //Começa o processo de decriptação    

@@ -156,7 +156,7 @@ int main( int argc, char *argv[ ] ){
             //Ler início do próximo bloco
             in[0] = (unsigned char) fgetc(fin);
         }
-        
+        free(out);
         fclose(fkey);
         fclose(fin);
         fclose(fout);
