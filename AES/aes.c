@@ -1,8 +1,14 @@
 #include <stdio.h>
 #include <string.h>
-//#include "aesToolBox.h"
+#include <stdlib.h>
+#include "aesToolBox.h"
 
-#define DUMMY_CHAR 0x08 //0x08 = BS
+unsigned long fsize(FILE *f){
+    fseek(f, 0, SEEK_END);
+    unsigned long len = (unsigned long)ftell(f);
+    fseek(f, 0, SEEK_SET);
+    return len;
+}
 
 int main( int argc, char *argv[ ] ){
     
@@ -27,9 +33,15 @@ int main( int argc, char *argv[ ] ){
         
     }else {
         
-        int i, j;
+        int i, j; 
+        long input_size;
         FILE *fkey, *fin, *fout;
-        unsigned char key[16], in[16], out[16];
+        unsigned char key[16], in[17], *out;
+        in[16] = (unsigned char) EOF;
+        
+        const unsigned char DUMMY_CHAR = (unsigned char) ' '; 
+        
+        out = (unsigned char*) malloc(16*sizeof(unsigned char));
         
         //Abre arquivos
         fkey = fopen(argv[3], "rb");
@@ -60,10 +72,15 @@ int main( int argc, char *argv[ ] ){
             }
         }
         
+        unsigned char roundKeys[176];
+        KeyExpansion(key, roundKeys);
+        
+        input_size = fsize(fin);
+        
         //Ler início do arquivo
         in[0] = (unsigned char) fgetc(fin);
         
-        while(in[0] != (unsigned char) EOF){
+        while(!feof(fin)){
             
             //Ler restante do bloco a ser processado
             for(i = 1; i < 16; i++){
@@ -71,17 +88,18 @@ int main( int argc, char *argv[ ] ){
                 in[i] = (unsigned char) fgetc(fin);
                 
                 //Arquivo acabou no meio do bloco
-                if(in[i] == 255){
+                if(feof(fin)){
+                    printf("\nsocorro\n");
+                    
+                    //Preencher bloco com dummy char
+                    for(j = i; j < 16; j++)
+                        in[j] = DUMMY_CHAR;
                     
                     //Parar loop
                     i = 16;
-                    
-                    //Preencher bloco com dummy char
-                    for(j = i; j < 16; j++){
-                        in[j] = DUMMY_CHAR;
-                    }
                 }
             }
+            
             
             //Criptografar
             if(strcmp(argv[2],"C") == 0){
@@ -89,11 +107,11 @@ int main( int argc, char *argv[ ] ){
                 if(strcmp(argv[1], "1") == 0){
                     
                     //Criptografar
-                    //INSERT FUNÇÃO HERE PLOX
-                    
+                    Encrypt(in, roundKeys, out);
                     
                     //Escrever resultado
-                    fwrite(out, sizeof(out[0]), sizeof(out)/sizeof(out[0]), fout);
+                    fwrite(out, 1, 16, fout);
+                   
                     
                 }
                 
@@ -103,8 +121,9 @@ int main( int argc, char *argv[ ] ){
                     //Criptografar
                     //INSERT FUNÇÃO HERE PLOX
                     
+                    
                     //Escrever resultado
-                    fwrite(out, sizeof(out[0]), sizeof(out)/sizeof(out[0]), fout);
+                    fwrite(out, 1, 16, fout);
                     
                 }
                 
@@ -115,10 +134,10 @@ int main( int argc, char *argv[ ] ){
                 if(strcmp(argv[1],"1") == 0){
                     
                     //Descriptografar
-                    //INSERT FUNÇÃO HERE PLOX
+                    Decrypt(in, roundKeys, out);
                     
                     //Escrever resultado
-                    fwrite(out, sizeof(out[0]), sizeof(out)/sizeof(out[0]), fout);
+                    fwrite(out, 1, 16, fout);
                     
                 }
                 
@@ -129,7 +148,7 @@ int main( int argc, char *argv[ ] ){
                     //INSERT FUNÇÃO HERE PLOX
                     
                     //Escrever resultado
-                    fwrite(out, sizeof(out[0]), sizeof(out)/sizeof(out[0]), fout);
+                    fwrite(out, 1, 16, fout);
                     
                 }
             }
