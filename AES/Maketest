@@ -1,0 +1,8 @@
+all:
+	gcc -o AEStest.out aes.c
+
+clean:
+	rm AEStest.out
+
+run:
+	./AEStest.out 1 C Tests/test.key Tests/test.in Tests/test.out
