@@ -31,8 +31,6 @@ int main( int argc, char *argv[ ] ){
         unsigned char key[16], in[17], *out;
         in[16] = (unsigned char) EOF;
         
-        const unsigned char DUMMY_CHAR = (unsigned char) ' '; 
-        
         out = (unsigned char*) malloc(16*sizeof(unsigned char));
         
         //Abre arquivos
@@ -81,7 +79,7 @@ int main( int argc, char *argv[ ] ){
                     
                     //Preencher bloco com dummy char
                     for(j = i; j < 16; j++)
-                        in[j] = DUMMY_CHAR;
+                        in[j] = 16-i;
                     
                     //Parar loop
                     i = 16;
@@ -95,9 +93,6 @@ int main( int argc, char *argv[ ] ){
                     
                     //Criptografar
                     Encrypt(in, roundKeys, out);
-                    
-                    //Escrever resultado
-                    fwrite(out, 1, 16, fout);
                                        
                 }
                 
@@ -106,10 +101,6 @@ int main( int argc, char *argv[ ] ){
                     
                     //Criptografar
                     //INSERT FUNÇÃO HERE PLOX
-                    
-                    
-                    //Escrever resultado
-                    fwrite(out, 1, 16, fout);
                     
                 }
                 
@@ -121,10 +112,6 @@ int main( int argc, char *argv[ ] ){
                     
                     //Descriptografar
                     Decrypt(in, roundKeys, out);
-                    
-                    //Escrever resultado
-                    fwrite(out, 1, 16, fout);
-                    
                 }
                 
                 //Algoritmo 2 (INSERT FANCY NAME HERE PLS...)
@@ -133,13 +120,32 @@ int main( int argc, char *argv[ ] ){
                     //Descriptografar
                     //INSERT FUNÇÃO HERE PLOX
                     
-                    //Escrever resultado
-                    fwrite(out, 1, 16, fout);
                 }
             }
             
             if(!feof(fin))
                 in[0] = (unsigned char) fgetc(fin);
+            
+            if(feof(fin) && strcmp(argv[2], "D") == 0){
+                short ver = 1;
+                unsigned char temp = out[15];
+                
+                for(i = 15; i >= 16 - temp; i-- ){
+                    if(out[i] != temp)
+                        ver = 0;
+                }
+                
+                if(ver){
+                    //Escrever resultado
+                    fwrite(out, 1, 16 - temp, fout);
+                }else{
+                    //Escrever resultado
+                    fwrite(out, 1, 16, fout);
+                }
+            }else{
+                //Escrever resultado
+                fwrite(out, 1, 16, fout);
+            }
         }
         
         fclose(fkey);
@@ -147,6 +153,8 @@ int main( int argc, char *argv[ ] ){
         fclose(fout);
         
         free(out);
+        
+        printf("\nOperação finalizada!\n");
     }
     return 0;
 }

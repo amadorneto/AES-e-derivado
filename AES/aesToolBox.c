@@ -356,7 +356,7 @@ void KeyExpansion(unsigned char *key, unsigned char *roundKeys){
             RotWord(temp);
             SubWord(temp);
             
-            temp[i] ^= RCon[i/4];
+            temp[0] ^= RCon[i/4];
         }
 
         //É feita a operação de XOR entre a coluna atual e quatro colunas atrás
