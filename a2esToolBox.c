@@ -3,6 +3,7 @@
 #include "aesToolBox.h"
 #include "a2esToolBox.h"
 
+//Encriptação realizada en A²ES
 void A2ESEncrypt(unsigned char *message, unsigned char *roundKeys1, unsigned char *roundKeys2, unsigned char *result){
     
     int i;
@@ -14,6 +15,7 @@ void A2ESEncrypt(unsigned char *message, unsigned char *roundKeys1, unsigned cha
     //Começa o processo de encriptação    
     AddRoundKey(result, roundKeys1);
     
+    //Ciclos de etapas de AES que ocorrem de forma alternada entre as chaves, realizando processos diretos e inversos
     for(i = 1; i < 5; i++) {
         if(i%2){
             SubBytes(result);
@@ -46,6 +48,7 @@ void A2ESEncrypt(unsigned char *message, unsigned char *roundKeys1, unsigned cha
     AddRoundKey(result,&roundKeys2[160]);
 }
 
+//Decriptação realizada por A²ES
 void A2ESDecrypt(unsigned char *crypto, unsigned char *roundKeys1, unsigned char *roundKeys2, unsigned char *result){
     
     int i;
@@ -59,6 +62,7 @@ void A2ESDecrypt(unsigned char *crypto, unsigned char *roundKeys1, unsigned char
     InverseShiftRows(result);
     InverseSubBytes(result);
     
+    //Ciclos de etapas de AES que ocorrem de forma alternada para reverter o processo de encriptação
     for(i = 4; i > 0; i--) {
         
         if(i%2){

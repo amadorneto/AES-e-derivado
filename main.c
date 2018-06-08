@@ -10,16 +10,16 @@ int main( int argc, char *argv[ ] ){
         
         //Argumentos inválidos
         //Printar tutorial
-        printf("\nAES - Universidade de São Paulo\n");
+        printf("\nAES e A²ES - Universidade de São Paulo\n");
         printf("Implementação por: \n");
         printf("Amador Marcelino de Souza Neto - 9266323 \n");
         printf("Arthur Rosa de Souza - 9266730 \n");
         printf("Gabriel Martins da Silva - 9266747 \n\n");
         
         printf("Forma de execução esperada: \n");
-        printf("    ./AES.out ALG OP KEY IN OUT \n\n");
+        printf("    ./A2ES.out ALG OP KEY IN OUT \n\n");
         printf("Onde: \n");
-        printf("    ALG     =   Algoritmo a ser Utilizado (1 - AES, 2 - ) \n");
+        printf("    ALG     =   Algoritmo a ser Utilizado (1 - AES, 2 - A²ES) \n");
         printf("    OP      =   Operação (C = Criptografar, D = Descriptografar) \n");
         printf("    KEY     =   Arquivo de chave (16bytes) \n");
         printf("    IN      =   Arquivo de entrada \n");
