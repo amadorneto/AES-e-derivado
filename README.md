@@ -7,7 +7,7 @@ Para compilação do algoritmo, é funcional o gcc a partir da versão 4.8.4. De
 make
 ```
 
-#Rodando
+# Rodando
 Para rodar o algoritmo deve-se seguir o formato de linha de comando:
 ```
 ./A2ES.out ALG OP KEY IN OUT
@@ -23,7 +23,7 @@ IN é o caminho para o arquivo de entrada (que será encriptado ou decriptado).
 OUT é o caminho para o arquivo de saída.
 
 
-Exemplo de comando:
+# Exemplo de comando:
 ```
 ./A2ES.out 2 C Tests/A2ES.key Tests/test.in Tests/test.out
 ```
